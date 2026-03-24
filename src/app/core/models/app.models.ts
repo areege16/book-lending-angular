@@ -61,8 +61,8 @@ export interface BorrowRecord {
   bookId: number;
   bookTitle: string;
   bookAuthor: string;
-  borrowedAt?: string;
-  dueDate?: string;
+  borrowedAt: string;
+  dueDate: string;
   returnedAt?: string | null;
   isReturned?: boolean;
   isOverdue?: boolean;

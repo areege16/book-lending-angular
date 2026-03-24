@@ -10,7 +10,7 @@ const MAX_PAGE_SIZE = 12;
 
 @Injectable({ providedIn: 'root' })
 export class BooksService {
-private readonly http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
   getBooksPage(pageNumber: number, pageSize: number = 10) {
     const size = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
@@ -50,7 +50,7 @@ private readonly http = inject(HttpClient);
     return this.http.post(`${API_BASE_URL}/api/Books/admin`, formData);
   }
 
-  updateBook(id: number,payload: BookPayload ) {
+  updateBook(id: number, payload: BookPayload) {
     const formData = this.toFormData(payload);
     return this.http.put(`${API_BASE_URL}/api/Books/admin/${id}`, formData);
   }
@@ -131,5 +131,4 @@ private readonly http = inject(HttpClient);
       isAvailable: Boolean(b['isAvailable'] ?? b['available'] ?? false),
     };
   }
-
 }

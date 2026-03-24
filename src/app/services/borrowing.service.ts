@@ -37,22 +37,20 @@ export class BorrowingService {
       : ((data as { items?: unknown[] })?.items ?? (raw as { items?: unknown[] })?.items ?? []);
     return rows.map((row) => {
       const x = row as Record<string, unknown>;
-      const returnDate =
-        (x['returnDate'] as string | null | undefined) ??
-        (x['returnedAt'] as string | null | undefined);
-      const dueDate = (x['dueDate'] as string) ?? (x['returnDueDate'] as string);
+      const returnDate = x['returnDate'] as string | null | undefined;
+      const dueDate = x['dueDate'] as string;
       const isOverdueFromApi = Boolean(x['isOverdue']);
       const computedOverdue = !!dueDate && !returnDate && new Date(dueDate).getTime() < Date.now();
       return {
         bookId: Number(x['bookId'] ?? x['id'] ?? 0),
         bookTitle: String(x['bookTitle'] ?? x['title'] ?? ''),
-        bookAuthor: (x['bookAuthor'] as string) ?? (x['author'] as string),
-        borrowedAt: (x['borrowDate'] as string) ?? (x['borrowedAt'] as string),
+        bookAuthor: x['bookAuthor'] as string,
+        borrowedAt: x['borrowDate'] as string,
         dueDate,
         returnedAt: returnDate ?? null,
         isReturned: !!returnDate,
         isOverdue: isOverdueFromApi || computedOverdue,
-        userName: (x['userName'] as string) ?? (x['memberName'] as string),
+        userName: x['userName'] as string,
         userEmail: x['userEmail'] as string,
       };
     });
