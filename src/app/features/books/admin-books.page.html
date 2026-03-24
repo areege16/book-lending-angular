@@ -1,0 +1,87 @@
+<app-error-modal [message]="error()" (dismissEvent)="error.set('')" />
+
+<section class="page animate-fade-in">
+  <header class="page-header">
+    <h1>Manage Books</h1>
+  </header>
+  <p class="muted">Add, edit, or remove books from the catalog.</p>
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="save()">
+    <h2>{{ editingId() ? 'Edit Book' : 'Add New Book' }}</h2>
+    <input placeholder="Title" formControlName="title" />
+    <input placeholder="Author" formControlName="author" />
+    <input placeholder="ISBN" formControlName="isbn" />
+    <textarea placeholder="Description" formControlName="description" rows="3"></textarea>
+    @if (editingBook(); as eb) {
+      @if (booksService.getCoverUrl(eb.coverImageUrl)) {
+        <div class="current-cover">
+          <span>Current cover:</span>
+          <img [src]="booksService.getCoverUrl(eb.coverImageUrl)" [alt]="eb.title" />
+        </div>
+      }
+    }
+    <input type="file" accept="image/*" (change)="onFileChange($event)" class="file-input" />
+    <button type="submit" [disabled]="loading()" class="btn-submit">
+      {{ editingId() ? 'Update Book' : 'Add Book' }}
+    </button>
+  </form>
+
+  <input
+    type="text"
+    [(ngModel)]="searchText"
+    placeholder="Search by title or author…"
+    class="max-w-sm px-4 py-2 rounded-lg border border-yellow-600/35 bg-transparent text-(--color-text) placeholder:opacity-50 focus:outline-none focus:border-yellow-500 transition-all duration-200 mb-4"
+  />
+
+  <div class="table-wrap">
+    <div class="row header">
+      <span>Cover</span>
+      <span>Title</span>
+      <span>Author</span>
+      <span>Actions</span>
+    </div>
+    @for (b of filteredBooks; track b.id; let i = $index) {
+      <div class="row animate-fade-in" [style.animation-delay]="i * 0.03 + 's'">
+        <span class="cover-cell">
+          @if (booksService.getCoverUrl(b.coverImageUrl)) {
+            <img [src]="booksService.getCoverUrl(b.coverImageUrl)" [alt]="b.title" class="cover-thumb" />
+          } @else {
+            <span class="no-cover">—</span>
+          }
+        </span>
+        <span>{{ b.title }}</span>
+        <span>{{ b.author }}</span>
+        <span class="actions">
+          <button (click)="edit(b)" class="btn-edit">Edit</button>
+          <button (click)="remove(b.id)" class="btn-delete">Delete</button>
+        </span>
+      </div>
+    }
+  </div>
+
+  @if (totalPages() > 1) {
+    <div class="pagination">
+      <button class="pagination__btn" [disabled]="!hasPreviousPage()" (click)="prevPage()">
+        ‹ Prev
+      </button>
+
+      @for (page of pageNumbers; track page) {
+        @if (page === -1) {
+          <span class="pagination__dots">...</span>
+        } @else {
+          <button
+            class="pagination__btn"
+            [class.active]="page === pageNumber"
+            (click)="goToPage(page)">
+            {{ page }}
+          </button>
+        }
+      }
+
+      <button class="pagination__btn" [disabled]="!hasNextPage()" (click)="nextPage()">
+        Next ›
+      </button>
+    </div>
+  }
+
+</section>

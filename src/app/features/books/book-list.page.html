@@ -1,0 +1,113 @@
+<app-error-modal [message]="error()" (dismissEvent)="error.set('')" />
+
+<div class="book-list-page animate-fade-in">
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="hero__inner">
+      <h1 class="hero__title font-heading">Readify</h1>
+      <p class="hero__welcome">Welcome, {{ userName() }}</p>
+      <p class="hero__tagline">Your Digital Library — borrow one book at a time.</p>
+
+      <div class="hero__search">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search by title or author…"
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog">
+    <h2 class="catalog__title font-heading">Browse collection</h2>
+    <p class="catalog__muted">
+      @if (searchText.trim()) {
+        {{ filteredBooks().length }} result(s) for "<strong>{{ searchText }}</strong
+        >"
+      } @else {
+        Discover titles and open a new chapter.
+      }
+    </p>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading books...</p>
+      </div>
+    } @else {
+      <div class="grid">
+        @for (b of filteredBooks(); track b.id; let i = $index) {
+          <article class="book animate-slide-up" [style.animation-delay]="i * 0.05 + 's'">
+            @if (booksService.getCoverUrl(b.coverImageUrl)) {
+              <div class="book-cover">
+                <img
+                  [src]="booksService.getCoverUrl(b.coverImageUrl)"
+                  [alt]="b.title"
+                  loading="lazy"
+                />
+              </div>
+            } @else {
+              <div class="book-cover no-img">
+                <span class="placeholder-icon">📖</span>
+                <span>No cover</span>
+              </div>
+            }
+            <div class="book-info">
+              <h3>{{ b.title }}</h3>
+              <p class="author">{{ b.author }}</p>
+              <span
+                class="badge"
+                [class.available]="b.isAvailable"
+                [class.borrowed]="!b.isAvailable"
+              >
+                {{ b.isAvailable ? 'Available' : 'Borrowed' }}
+              </span>
+            </div>
+            <div class="actions">
+              <a [routerLink]="['/books', b.id]" class="btn-detail">Details</a>
+              @if (b.isAvailable) {
+                <button (click)="borrow(b.id)" class="btn-borrow">Borrow</button>
+              }
+            </div>
+          </article>
+        }
+      </div>
+
+      @if (books().length === 0) {
+        <div class="empty-state">
+          <p>No books in the catalog yet.</p>
+        </div>
+      }
+
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button class="pagination__btn" [disabled]="!hasPreviousPage()" (click)="prevPage()">
+            ‹ Prev
+          </button>
+
+          @for (page of pageNumbers; track page) {
+            @if (page === -1) {
+              <span class="pagination__dots">...</span>
+            } @else {
+              <button
+                class="pagination__btn pagination__btn--page"
+                [class.active]="page === pageNumber"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+            }
+          }
+
+          <button class="pagination__btn" [disabled]="!hasNextPage()" (click)="nextPage()">
+            Next ›
+          </button>
+        </div>
+      }
+    }
+  </section>
+</div>

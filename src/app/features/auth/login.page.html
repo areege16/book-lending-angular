@@ -1,0 +1,28 @@
+<app-error-modal [message]="error()" (dismissEvent)="error.set('')" />
+
+<section class="card animate-slide-up">
+  <h1>Welcome Back</h1>
+  <p class="subtitle">Sign in to your account</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>Email</label>
+    <input type="email" formControlName="email" placeholder="you@example.com" />
+    @if (form.controls.email.invalid && form.controls.email.touched) {
+      <small>Valid email is required.</small>
+    }
+
+    <label>Password</label>
+    <input type="password" formControlName="password" placeholder="••••••••" />
+    @if (form.controls.password.invalid && form.controls.password.touched) {
+      <small>Password is required.</small>
+    }
+
+    <button type="submit" [disabled]="loading() || form.invalid" [class.loading]="loading()">
+      {{ loading() ? 'Signing in...' : 'Sign In' }}
+    </button>
+  </form>
+
+  <p class="footer">
+    Don't have an account? <a routerLink="/register">Create one</a>
+  </p>
+</section>

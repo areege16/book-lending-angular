@@ -1,0 +1,67 @@
+<app-error-modal [message]="error()" (dismissEvent)="error.set('')" />
+
+<section class="page animate-fade-in">
+  <header class="page-header">
+    <h1>Admin Dashboard</h1>
+    <p class="muted">All borrowing records across the system.</p>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading records...</p>
+    </div>
+  } @else {
+    @if (records().length === 0) {
+      <div class="empty-state">
+        <p>No borrowing records yet.</p>
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>Book ID</th>
+              <th>User</th>
+              <th>Email</th>
+              <th>Book</th>
+              <th>Author</th>
+              <th>Borrowed</th>
+              <th>Due</th>
+              <th>Returned</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of records(); track $index; let i = $index) {
+              <tr
+                class="animate-fade-in"
+                [class.overdue]="isOverdue(r)"
+                [style.animation-delay]="i * 0.02 + 's'"
+              >
+                <td>{{ r.bookId || '-' }}</td>
+                <td>{{ r.userName || '-' }}</td>
+                <td>{{ r.userEmail || '-' }}</td>
+                <td>{{ r.bookTitle }}</td>
+                <td>{{ r.bookAuthor || '-' }}</td>
+                <td>{{ r.borrowedAt | date: 'mediumDate' }}</td>
+                <td>{{ r.dueDate | date: 'mediumDate' }}</td>
+                <td>{{ r.returnedAt ? (r.returnedAt | date: 'mediumDate') : '-' }}</td>
+                <td>
+                  <span
+                    class="status-badge"
+                    [class.returned]="r.isReturned"
+                    [class.overdue]="isOverdue(r)"
+                    [class.borrowed]="!r.isReturned && !isOverdue(r)"
+                  >
+                    {{ r.isReturned ? 'Returned' : isOverdue(r) ? 'Overdue' : 'Borrowed' }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

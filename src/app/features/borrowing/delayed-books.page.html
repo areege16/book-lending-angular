@@ -1,0 +1,37 @@
+<app-error-modal [message]="error()" (dismissEvent)="error.set('')" />
+
+<section class="page animate-fade-in">
+  <header class="page-header">
+    <h1>Delayed Books</h1>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading delayed books...</p>
+    </div>
+  } @else {
+    @if (delayed().length === 0) {
+      <div class="empty-state">
+        <p>No overdue books at the moment.</p>
+      </div>
+    } @else {
+      <div class="list">
+        @for (r of delayed(); track $index; let i = $index) {
+          <article
+            class="item overdue-card animate-slide-up"
+            [style.animation-delay]="i * 0.06 + 's'"
+          >
+            <div class="item-header">
+              <h3>{{ r.bookTitle }}</h3>
+              <span class="badge-overdue">Overdue</span>
+            </div>
+            <p>Member: {{ r.userName || '-' }}</p>
+            <p>Email: {{ r.userEmail || '-' }}</p>
+            <p class="due">Due: {{ r.dueDate | date: 'mediumDate' }}</p>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>

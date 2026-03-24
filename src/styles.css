@@ -1,0 +1,95 @@
+/* Readify — Dark Elegant Library */
+@import 'tailwindcss';
+
+:root {
+  --color-bg: #0f1923;
+  --color-surface: #1a2535;
+  --color-surface-elevated: #243044;
+  --color-primary: #069659;
+  --color-primary-hover: #2d6a4f;
+  --color-secondary: #d4a853;
+  --color-secondary-hover: #e8c06a;
+  --color-text: #f5f0e8;
+  --color-text-muted: rgba(245, 240, 232, 0.65);
+  --color-accent: #e63946;
+  --color-success: #52b788;
+  --color-warning: #d4a853;
+  --color-error: #e63946;
+  --color-error-bg: rgba(230, 57, 70, 0.12);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  scroll-behavior: smooth;
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+.text-success {
+  color: var(--color-success);
+}
+.text-warning {
+  color: var(--color-warning);
+}
+.text-error {
+  color: var(--color-error);
+}

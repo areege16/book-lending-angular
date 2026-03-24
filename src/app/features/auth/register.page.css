@@ -1,0 +1,94 @@
+.card {
+  max-width: 420px;
+  margin: 2rem auto;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(245, 240, 232, 0.06);
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--color-text);
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+input,
+select {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(245, 240, 232, 0.12);
+  border-radius: var(--radius);
+  background: rgba(15, 25, 35, 0.6);
+  color: var(--color-text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+}
+
+select {
+  cursor: pointer;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+}
+
+button {
+  margin-top: 0.5rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(212, 168, 83, 0.4);
+  border-radius: var(--radius);
+  background: #1b4332;
+  color: var(--color-secondary);
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.role-group {
+  display: flex;
+  gap: 5.5rem;
+  margin-top: 0.2rem;
+  justify-content: center;
+}
+
+.role-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  margin-top: 0;
+}
+
+.role-group input[type='radio'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-secondary);
+  cursor: pointer;
+  padding: 0;
+}

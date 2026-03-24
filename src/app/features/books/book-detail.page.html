@@ -1,0 +1,45 @@
+<app-error-modal [message]="error()" (dismissEvent)="error.set('')" />
+
+@if (book(); as b) {
+  <section class="page animate-fade-in">
+    <a routerLink="/books" class="btn-back">← Back</a>
+
+    <div class="detail-card">
+      <div class="cover-section">
+        @if (booksService.getCoverUrl(b.coverImageUrl)) {
+          <div class="book-cover">
+            <img [src]="booksService.getCoverUrl(b.coverImageUrl)" [alt]="b.title" />
+          </div>
+        } @else {
+          <div class="book-cover no-img">
+            <span class="placeholder-icon">📖</span>
+            <span>No cover</span>
+          </div>
+        }
+      </div>
+
+      <div class="info-section">
+        <h1>{{ b.title }}</h1>
+        <p class="author">by {{ b.author }}</p>
+        <p class="isbn">ISBN: {{ b.isbn }}</p>
+        <p class="description">{{ b.description }}</p>
+        <span class="badge" [class.available]="b.isAvailable" [class.borrowed]="!b.isAvailable">
+          {{ b.isAvailable ? 'Available' : 'Borrowed' }}
+        </span>
+
+        <div class="actions">
+          @if (b.isAvailable) {
+            <button (click)="borrow(b.id)" class="btn-borrow">Borrow this book</button>
+          }
+          @if (!b.isAvailable && borrowedByMe()) {
+            <button (click)="returnBook(b.id)" class="btn-return">Return Book</button>
+          }
+        </div>
+
+        @if (dueDate()) {
+          <p class="due-date">Due: {{ dueDate() | date: 'mediumDate' }}</p>
+        }
+      </div>
+    </div>
+  </section>
+}

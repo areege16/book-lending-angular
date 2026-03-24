@@ -1,0 +1,33 @@
+<app-error-modal [message]="error()" (dismissEvent)="error.set('')" />
+
+<section class="card animate-slide-up">
+  <h1>Create Account</h1>
+  <p class="subtitle">Join the book lending community</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <input placeholder="Full Name" formControlName="name" />
+    <input placeholder="Username" formControlName="userName" />
+    <input type="email" placeholder="Email" formControlName="email" />
+    <input placeholder="Phone" formControlName="phoneNumber" />
+    <input type="password" placeholder="Password" formControlName="password" />
+    <input type="password" placeholder="Confirm Password" formControlName="confirmPassword" />
+
+    <label>Role</label>
+    <div class="role-group">
+      <label>
+        <input type="radio" formControlName="role" value="Reader" />
+        Reader
+      </label>
+      <label>
+        <input type="radio" formControlName="role" value="Admin" />
+        Admin
+      </label>
+    </div>
+
+    <button type="submit" [disabled]="loading() || form.invalid" [class.loading]="loading()">
+      {{ loading() ? 'Creating...' : 'Create Account' }}
+    </button>
+  </form>
+
+  <p class="footer">Already have an account? <a routerLink="/login">Sign in</a></p>
+</section>

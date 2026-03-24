@@ -1,0 +1,42 @@
+<app-error-modal [message]="error()" (dismissEvent)="error.set('')" />
+
+<section class="page animate-fade-in">
+  <header class="page-header">
+    <h1>{{ userName() }}'s Profile</h1>
+    <p class="muted">Your borrowed books and due dates.</p>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading your history...</p>
+    </div>
+  } @else {
+    @if (records().length === 0) {
+      <div class="empty-state">
+        <p>You haven't borrowed any books yet.</p>
+        <a routerLink="/books">Browse catalog</a>
+      </div>
+    } @else {
+      <div class="list">
+        @for (r of records(); track $index; let i = $index) {
+          <article class="item animate-slide-up" [style.animation-delay]="i * 0.06 + 's'">
+            <h3>{{ r.bookTitle }}</h3>
+            <p>Borrowed: {{ r.borrowedAt | date: 'mediumDate' }}</p>
+            <p [class.overdue]="isOverdue(r) && !r.isReturned">
+              Due: {{ r.dueDate | date: 'mediumDate' }}
+            </p>
+            <span
+              class="badge"
+              [class.returned]="r.isReturned"
+              [class.borrowed]="!r.isReturned"
+              [class.overdue-badge]="isOverdue(r) && !r.isReturned"
+            >
+              {{ r.isReturned ? 'Returned' : isOverdue(r) ? 'Overdue' : 'Borrowed' }}
+            </span>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>
