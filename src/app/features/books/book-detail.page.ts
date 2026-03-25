@@ -34,12 +34,7 @@ export class BookDetailPageComponent implements OnInit {
   borrowedByMe() {
     const b = this.book();
     if (!b) return false;
-    return this.history().some(
-      (h) =>
-        !h.isReturned &&
-        (h.bookId === b.id ||
-          (h.bookTitle === b.title && (h.bookAuthor === b.author || !h.bookAuthor))),
-    );
+    return this.history().some((h) => !h.isReturned && h.bookId === b.id);
   }
 
   borrow(bookId: number) {

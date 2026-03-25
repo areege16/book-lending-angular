@@ -89,13 +89,13 @@
             ‹ Prev
           </button>
 
-          @for (page of pageNumbers; track page) {
+          @for (page of pageNumbers(); track page) {
             @if (page === -1) {
               <span class="pagination__dots">...</span>
             } @else {
               <button
                 class="pagination__btn pagination__btn--page"
-                [class.active]="page === pageNumber"
+                [class.active]="page === pageNumber()"
                 (click)="goToPage(page)"
               >
                 {{ page }}

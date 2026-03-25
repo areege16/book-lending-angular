@@ -1,7 +1,8 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpStatusCode } from '@angular/common/http';
 import { inject } from '@angular/core';
 
-import { AuthService } from '@services/auth.service';
+import { AuthService } from '@services';
+import { catchError, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
@@ -15,5 +16,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     setHeaders: { Authorization: `Bearer ${token}` },
   });
 
-  return next(authReq);
+  return next(authReq).pipe(
+    catchError((err) => {
+      if (err.status === HttpStatusCode.Unauthorized) {
+        auth.logout();
+      }
+      return throwError(() => err);
+    }),
+  );
 };

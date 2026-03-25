@@ -44,7 +44,11 @@
       <div class="row animate-fade-in" [style.animation-delay]="i * 0.03 + 's'">
         <span class="cover-cell">
           @if (booksService.getCoverUrl(b.coverImageUrl)) {
-            <img [src]="booksService.getCoverUrl(b.coverImageUrl)" [alt]="b.title" class="cover-thumb" />
+            <img
+              [src]="booksService.getCoverUrl(b.coverImageUrl)"
+              [alt]="b.title"
+              class="cover-thumb"
+            />
           } @else {
             <span class="no-cover">—</span>
           }
@@ -65,14 +69,15 @@
         ‹ Prev
       </button>
 
-      @for (page of pageNumbers; track page) {
+      @for (page of pageNumbers(); track page) {
         @if (page === -1) {
           <span class="pagination__dots">...</span>
         } @else {
           <button
             class="pagination__btn"
-            [class.active]="page === pageNumber"
-            (click)="goToPage(page)">
+            [class.active]="page === pageNumber()"
+            (click)="goToPage(page)"
+          >
             {{ page }}
           </button>
         }
@@ -83,5 +88,4 @@
       </button>
     </div>
   }
-
 </section>

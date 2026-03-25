@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { getErrorMessage } from '@core/utils';
@@ -25,8 +25,8 @@ export class AdminBooksPageComponent implements OnInit {
   selectedCover: File | null = null;
   searchText = '';
 
-  pageNumber = 1;
-  pageSize = 14;
+  pageNumber = signal(1);
+  pageSize = 12;
   totalCount = signal(0);
   totalPages = signal(0);
   hasNextPage = signal(false);
@@ -102,20 +102,20 @@ export class AdminBooksPageComponent implements OnInit {
 
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages()) {
-      this.pageNumber = page;
+      this.pageNumber.set(page);
       this.load();
     }
   }
 
   nextPage() {
     if (this.hasNextPage()) {
-      this.pageNumber++;
+      this.pageNumber.set(this.pageNumber() + 1);
       this.load();
     }
   }
   prevPage() {
     if (this.hasPreviousPage()) {
-      this.pageNumber--;
+      this.pageNumber.set(this.pageNumber() - 1);
       this.load();
     }
   }
@@ -128,15 +128,15 @@ export class AdminBooksPageComponent implements OnInit {
     );
   }
 
-  get pageNumbers(): number[] {
+  pageNumbers = computed(() => {
     const total = this.totalPages();
-    const current = this.pageNumber;
+    const current = this.pageNumber();
     const pages: number[] = [];
 
     pages.push(1);
 
-    let start = Math.max(2, current - 2);
-    let end = Math.min(total - 1, current + 2);
+    const start = Math.max(2, current - 2);
+    const end = Math.min(total - 1, current + 2);
 
     if (start > 2) pages.push(-1);
     for (let i = start; i <= end; i++) pages.push(i);
@@ -145,10 +145,10 @@ export class AdminBooksPageComponent implements OnInit {
     if (total > 1) pages.push(total);
 
     return pages;
-  }
+  });
 
   private load() {
-    this.booksService.getBooksPage(this.pageNumber, this.pageSize).subscribe({
+    this.booksService.getBooksPage(this.pageNumber(), this.pageSize).subscribe({
       next: (result) => {
         this.books.set(result.items);
         this.totalCount.set(result.totalCount);

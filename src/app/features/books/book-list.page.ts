@@ -28,8 +28,8 @@ export class BookListPageComponent implements OnInit {
   searchText = '';
   filteredBooks = signal<Book[]>([]);
 
-  pageNumber: number = 1;
-  pageSize: number = 14;
+  pageNumber = signal(1);
+  pageSize: number = 12;
   totalCount = signal(0);
   totalPages = signal(0);
   hasNextPage = signal(false);
@@ -43,7 +43,7 @@ export class BookListPageComponent implements OnInit {
     this.loading.set(true);
     this.error.set('');
 
-    this.booksService.getBooksPage(this.pageNumber, this.pageSize).subscribe({
+    this.booksService.getBooksPage(this.pageNumber(), this.pageSize).subscribe({
       next: (paged) => {
         this.books.set(paged.items);
         this.filteredBooks.set(paged.items);
@@ -76,34 +76,34 @@ export class BookListPageComponent implements OnInit {
 
   nextPage() {
     if (this.hasNextPage()) {
-      this.pageNumber++;
+      this.pageNumber.set(this.pageNumber() + 1);
       this.fetchBooks();
     }
   }
 
   prevPage() {
     if (this.hasPreviousPage()) {
-      this.pageNumber--;
+      this.pageNumber.set(this.pageNumber() - 1);
       this.fetchBooks();
     }
   }
 
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages()) {
-      this.pageNumber = page;
+      this.pageNumber.set(page);
       this.fetchBooks();
     }
   }
 
-  get pageNumbers(): number[] {
+  pageNumbers = computed(() => {
     const total = this.totalPages();
-    const current = this.pageNumber;
+    const current = this.pageNumber();
     const pages: number[] = [];
 
     pages.push(1);
 
-    let start = Math.max(2, current - 2);
-    let end = Math.min(total - 1, current + 2);
+    const start = Math.max(2, current - 2);
+    const end = Math.min(total - 1, current + 2);
 
     if (start > 2) pages.push(-1);
     for (let i = start; i <= end; i++) pages.push(i);
@@ -112,7 +112,7 @@ export class BookListPageComponent implements OnInit {
     if (total > 1) pages.push(total);
 
     return pages;
-  }
+  });
 
   borrow(bookId: number) {
     if (!this.authService.isAuthenticated()) {
